@@ -75,9 +75,8 @@
 
     <script src="sarcasm-detector.js"></script>
     <script>
-        const detector = new SarcasmDetector();
-
         function analyze() {
+            const detector = new SarcasmDetector();
             const text = document.getElementById('input').value;
             const sarcasmResult = detector.detectSarcasm(text);
             const toneResult = detector.detectTone(text);
