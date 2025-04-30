@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarcasm Detector Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sarcasm Detector Demo</h1>
+        <textarea id="textInput" placeholder="Enter text to analyze for sarcasm..."></textarea>
+        <button onclick="analyze()">Analyze</button>
+        <div id="result" class="result">
+            Results will appear here...
+        </div>
+    </div>
+
+    <script src="../sarcasm-detector.js"></script>
+    <script>
+        let detector = new SarcasmDetector();
+
+        function analyze() {
+            const text = document.getElementById('textInput').value;
+            const result = detector.detectSarcasm(text);
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h3>Analysis Results:</h3>
+                <p><strong>Is Sarcastic:</strong> ${result.isSarcastic ? 'Yes' : 'No'}</p>
+                <p><strong>Confidence:</strong> ${(result.confidence * 100).toFixed(2)}%</p>
+                <p><strong>Sentiment Score:</strong> ${result.sentiment}</p>
+                <h4>Indicators:</h4>
+                <ul>
+                    <li>Pattern Matches: ${result.indicators.patternMatches ? 'Yes' : 'No'}</li>
+                    <li>Has Exaggeration: ${result.indicators.hasExaggeration ? 'Yes' : 'No'}</li>
+                    <li>Has Irony: ${result.indicators.hasIrony ? 'Yes' : 'No'}</li>
+                    <li>Positive Sentiment with Negative Context: ${result.indicators.hasPositiveSentimentWithNegativeContext ? 'Yes' : 'No'}</li>
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html> 
