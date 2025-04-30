@@ -1,0 +1,25 @@
+{
+  "name": "sarcasm-detector",
+  "version": "1.0.0",
+  "description": "A library for detecting sarcasm and tone in text using pattern matching and linguistic rules",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "sarcasm",
+    "tone",
+    "nlp",
+    "sentiment",
+    "detection"
+  ],
+  "author": "Vamshi Krishna Meher",
+  "license": "MIT",
+  "dependencies": {
+    "sentiment": "^5.0.2",
+    "natural": "^6.2.0"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+} 
