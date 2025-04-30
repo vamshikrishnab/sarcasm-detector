@@ -41,7 +41,7 @@ class SarcasmDetector {
         // Check for common sarcasm patterns
         const patternMatches = this.sarcasmPatterns.some(pattern => pattern.test(text));
         
-        // Check for exaggeration
+        // Check for exaggeration 
         const hasExaggeration = this.exaggerationWords.some(word => 
             tokens.includes(word.toLowerCase())
         );
