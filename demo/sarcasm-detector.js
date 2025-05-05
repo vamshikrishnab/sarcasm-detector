@@ -249,18 +249,14 @@ class SarcasmDetector {
             tone = 'positive';
         } else if (sentiment.score < -2) {
             tone = 'negative';
-        } else if (sentiment.score > 0) {
-            tone = 'slightly positive';
-        } else if (sentiment.score < 0) {
-            tone = 'slightly negative';
+        } else if (context.hasContradiction) {
+            tone = 'ironic';
         }
         
         return {
             tone,
-            confidence: Math.abs(sentiment.score) / 5,
-            sentiment: sentiment.score,
-            isSarcastic: sarcasm.isSarcastic,
-            context: context
+            confidence: sarcasm.confidence,
+            sentiment: sentiment.score
         };
     }
 } 
