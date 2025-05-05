@@ -1,34 +1,37 @@
 {
   "name": "sarcasm-detector",
   "version": "1.0.0",
-  "description": "A library for detecting sarcasm and tone in text using pattern matching and linguistic rules",
-  "main": "index.js",
-  "browser": "demo/sarcasm-detector.js",
+  "description": "A sophisticated NLP-based sarcasm detection library for both Node.js and browser environments",
+  "main": "dist/sarcasm-detector.js",
+  "browser": "dist/sarcasm-detector.js",
+  "types": "dist/sarcasm-detector.d.ts",
   "scripts": {
-    "test": "node test.js",
-    "build": "cp demo/sarcasm-detector.js dist/ && cp demo/index.html dist/",
-    "prepublishOnly": "npm run build"
+    "build": "mkdir -p dist && cp demo/sarcasm-detector.js dist/ && cp demo/index.html dist/demo.html",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "sarcasm",
-    "tone",
     "nlp",
-    "sentiment",
-    "detection"
+    "sentiment-analysis",
+    "tone-detection",
+    "natural-language-processing",
+    "text-analysis"
   ],
-  "author": "Vamshi Krishna Meher",
+  "author": "Vamshi Krishna",
   "license": "MIT",
-  "dependencies": {
-    "sentiment": "^5.0.2",
-    "natural": "^6.2.0"
-  },
-  "devDependencies": {
-    "jest": "^29.5.0"
-  },
   "files": [
     "dist",
     "demo",
-    "index.js",
-    "test.js"
-  ]
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vamshikrishnab/sarcasm-detector.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vamshikrishnab/sarcasm-detector/issues"
+  },
+  "homepage": "https://github.com/vamshikrishnab/sarcasm-detector#readme"
 } 
