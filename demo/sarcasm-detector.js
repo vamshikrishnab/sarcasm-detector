@@ -51,6 +51,56 @@ class SarcasmDetector {
                 pattern: /just what i needed/i,
                 context: ['sarcasm', 'frustration'],
                 weight: 0.4
+            },
+            {
+                pattern: /totally my favorite/i,
+                context: ['sarcasm', 'exaggeration'],
+                weight: 0.5
+            },
+            {
+                pattern: /just love when/i,
+                context: ['sarcasm', 'frustration'],
+                weight: 0.5
+            },
+            {
+                pattern: /can't wait/i,
+                context: ['sarcasm', 'anticipation'],
+                weight: 0.4
+            },
+            {
+                pattern: /not\.$/i,
+                context: ['sarcasm', 'negation'],
+                weight: 0.6
+            },
+            {
+                pattern: /perfect plan/i,
+                context: ['sarcasm', 'approval'],
+                weight: 0.4
+            },
+            {
+                pattern: /amazing\. that's exactly what/i,
+                context: ['sarcasm', 'approval'],
+                weight: 0.5
+            },
+            {
+                pattern: /absolutely thrilled/i,
+                context: ['sarcasm', 'enthusiasm'],
+                weight: 0.5
+            },
+            {
+                pattern: /what a surprise/i,
+                context: ['sarcasm', 'surprise'],
+                weight: 0.4
+            },
+            {
+                pattern: /nothing screams.*like/i,
+                context: ['sarcasm', 'comparison'],
+                weight: 0.5
+            },
+            {
+                pattern: /so clear.*more confused/i,
+                context: ['sarcasm', 'clarity'],
+                weight: 0.5
             }
         ];
 
@@ -75,6 +125,11 @@ class SarcasmDetector {
                 words: ['never', 'always', 'every', 'all'],
                 intensity: 0.8,
                 context: ['absolute', 'universal']
+            },
+            {
+                words: ['favorite', 'love', 'thrilled', 'excited'],
+                intensity: 0.9,
+                context: ['enthusiasm', 'sarcasm']
             }
         ];
 
@@ -150,6 +205,31 @@ class SarcasmDetector {
             }
         ];
 
+        // Enhanced sentiment analysis with context
+        this.sentimentContext = {
+            positive: {
+                words: ['good', 'great', 'excellent', 'wonderful', 'amazing', 'fantastic', 'perfect',
+                       'love', 'like', 'enjoy', 'thrilled', 'excited', 'favorite', 'brilliant',
+                       'clear', 'productive', 'helpful', 'useful'],
+                context: ['praise', 'approval', 'enthusiasm'],
+                weight: 0.8
+            },
+            negative: {
+                words: ['bad', 'terrible', 'awful', 'horrible', 'dislike', 'hate', 'worst',
+                       'poor', 'suck', 'stupid', 'outdated', 'old', 'ancient', 'primitive',
+                       'archaic', 'useless', 'pointless', 'waste', 'failure', 'confused',
+                       'crashed', 'broke', 'cut', 'ignore'],
+                context: ['criticism', 'disapproval', 'frustration'],
+                weight: 0.8
+            },
+            neutral: {
+                words: ['interesting', 'fascinating', 'curious', 'notable', 'remarkable',
+                       'surprise', 'wait', 'hope', 'plan'],
+                context: ['observation', 'neutral', 'anticipation'],
+                weight: 0.5
+            }
+        };
+
         // Enhanced semantic patterns with context and weights
         this.semanticPatterns = [
             {
@@ -171,27 +251,28 @@ class SarcasmDetector {
                 pattern: /(?:in|during)\s+(?:the|this)\s+(?:21st|modern)\s+(?:century|era|age)/i,
                 context: ['temporal', 'sarcasm'],
                 weight: 0.4
-            }
-        ];
-
-        // Enhanced sentiment analysis with context
-        this.sentimentContext = {
-            positive: {
-                words: ['good', 'great', 'excellent', 'wonderful', 'amazing', 'fantastic', 'perfect'],
-                context: ['praise', 'approval'],
-                weight: 0.8
             },
-            negative: {
-                words: ['bad', 'terrible', 'awful', 'horrible', 'dislike', 'hate', 'worst'],
-                context: ['criticism', 'disapproval'],
-                weight: 0.8
+            {
+                pattern: /(?:nothing|nothing else)\s+(?:screams|says)\s+(?:productivity|efficiency|success)\s+(?:like|more than)/i,
+                context: ['sarcasm', 'comparison'],
+                weight: 0.6
             },
-            neutral: {
-                words: ['interesting', 'fascinating', 'curious', 'notable', 'remarkable'],
-                context: ['observation', 'neutral'],
+            {
+                pattern: /(?:so|very)\s+(?:clear|obvious|simple)\s+(?:that|,)\s+(?:i|we|you)\s+(?:am|are|is)\s+(?:even|now)\s+(?:more|still)\s+(?:confused|lost|puzzled)/i,
+                context: ['sarcasm', 'clarity'],
+                weight: 0.6
+            },
+            {
+                pattern: /(?:can't|cannot)\s+wait\s+(?:for|to)/i,
+                context: ['sarcasm', 'anticipation'],
+                weight: 0.5
+            },
+            {
+                pattern: /(?:just|really)\s+love\s+(?:when|it when)/i,
+                context: ['sarcasm', 'enthusiasm'],
                 weight: 0.5
             }
-        };
+        ];
     }
 
     // Calculate cosine similarity between two vectors
@@ -315,7 +396,10 @@ class SarcasmDetector {
         // Enhanced positive sentiment with negative context detection
         const hasPositiveSentimentWithNegativeContext = 
             (sentiment.score > 0 && context.hasNegativeWords) ||
-            (context.hasPositiveWords && context.hasNegativeWords);
+            (context.hasPositiveWords && context.hasNegativeWords) ||
+            (text.toLowerCase().includes('not') && sentiment.score > 0) ||
+            (text.toLowerCase().includes('never') && sentiment.score > 0) ||
+            (text.toLowerCase().includes('nothing') && sentiment.score > 0);
         
         // Calculate enhanced sarcasm probability
         const sarcasmScore = this.calculateSarcasmScore({
@@ -352,13 +436,13 @@ class SarcasmDetector {
         let score = 0;
         
         // Pattern matches with context
-        if (indicators.patternMatches) score += 0.2;
+        if (indicators.patternMatches) score += 0.3;
         
         // Exaggeration with intensity
-        if (indicators.hasExaggeration) score += 0.2;
+        if (indicators.hasExaggeration) score += 0.25;
         
         // Irony with context
-        if (indicators.hasIrony) score += 0.2;
+        if (indicators.hasIrony) score += 0.25;
 
         // Temporal phrases with context
         if (indicators.hasTemporalPhrase) score += 0.2;
@@ -367,7 +451,7 @@ class SarcasmDetector {
         if (indicators.hasContradiction) score += 0.3;
         
         // Positive sentiment with negative context
-        if (indicators.hasPositiveSentimentWithNegativeContext) score += 0.3;
+        if (indicators.hasPositiveSentimentWithNegativeContext) score += 0.4;
 
         // Semantic score with context
         score += indicators.semanticScore;
