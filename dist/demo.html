@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarcasm Detector Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input-section, .test-cases {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            margin-top: 20px;
+        }
+        .test-case {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .test-case:hover {
+            background-color: #e9ecef;
+        }
+        .test-case h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .test-case p {
+            margin: 0;
+            color: #666;
+        }
+        .indicator {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .true {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .false {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .test-cases {
+            margin-left: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sarcasm Detector Demo</h1>
+    <div class="container">
+        <div class="input-section">
+            <textarea id="textInput" placeholder="Enter text to analyze for sarcasm..."></textarea>
+            <button onclick="analyze()">Analyze</button>
+            <div id="result" class="result">
+                Results will appear here...
+            </div>
+        </div>
+        <div class="test-cases">
+            <h2>Try these examples:</h2>
+            <div class="test-case" onclick="useTestCase(this)">
+                <h3>Obvious Sarcasm</h3>
+                <p>"Well, that was the most groundbreaking idea I've ever heard — if we were still living in 2005"</p>
+            </div>
+            <div class="test-case" onclick="useTestCase(this)">
+                <h3>Subtle Sarcasm</h3>
+                <p>"That's exactly what we needed, another meeting that could have been an email"</p>
+            </div>
+            <div class="test-case" onclick="useTestCase(this)">
+                <h3>Ironic Statement</h3>
+                <p>"Because that makes perfect sense, let's use fax machines in 2024"</p>
+            </div>
+            <div class="test-case" onclick="useTestCase(this)">
+                <h3>Exaggeration</h3>
+                <p>"Oh great, just what I needed, another 100 emails to respond to"</p>
+            </div>
+            <div class="test-case" onclick="useTestCase(this)">
+                <h3>Positive with Negative Context</h3>
+                <p>"Fantastic, another system update that breaks everything"</p>
+            </div>
+            <div class="test-case" onclick="useTestCase(this)">
+                <h3>Non-Sarcastic (Control)</h3>
+                <p>"I really enjoyed the presentation, it was very informative"</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="sarcasm-detector.js"></script>
+    <script>
+        let detector = new SarcasmDetector();
+
+        function useTestCase(element) {
+            const text = element.querySelector('p').textContent;
+            document.getElementById('textInput').value = text;
+            analyze();
+        }
+
+        function analyze() {
+            const text = document.getElementById('textInput').value;
+            const result = detector.detectSarcasm(text);
+            const tone = detector.detectTone(text);
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h3>Analysis Results:</h3>
+                <div class="indicator ${result.isSarcastic}">
+                    <strong>Is Sarcastic:</strong> ${result.isSarcastic ? 'Yes' : 'No'}
+                </div>
+                <p><strong>Confidence:</strong> ${(result.confidence * 100).toFixed(2)}%</p>
+                <p><strong>Sentiment Score:</strong> ${result.sentiment.toFixed(2)}</p>
+                <p><strong>Tone:</strong> ${tone.tone} (${(tone.confidence * 100).toFixed(2)}% confidence)</p>
+                <p><strong>Context Score:</strong> ${(result.indicators.contextScore * 100).toFixed(2)}%</p>
+                <h4>Indicators:</h4>
+                <ul>
+                    <li class="indicator ${result.indicators.patternMatches}">
+                        Pattern Matches: ${result.indicators.patternMatches ? 'Yes' : 'No'}
+                    </li>
+                    <li class="indicator ${result.indicators.hasExaggeration}">
+                        Has Exaggeration: ${result.indicators.hasExaggeration ? 'Yes' : 'No'}
+                    </li>
+                    <li class="indicator ${result.indicators.hasIrony}">
+                        Has Irony: ${result.indicators.hasIrony ? 'Yes' : 'No'}
+                    </li>
+                    <li class="indicator ${result.indicators.hasTemporalPhrase}">
+                        Has Temporal Phrase: ${result.indicators.hasTemporalPhrase ? 'Yes' : 'No'}
+                    </li>
+                    <li class="indicator ${result.indicators.hasContradiction}">
+                        Has Contradiction: ${result.indicators.hasContradiction ? 'Yes' : 'No'}
+                    </li>
+                    <li class="indicator ${result.indicators.hasPositiveSentimentWithNegativeContext}">
+                        Positive Sentiment with Negative Context: ${result.indicators.hasPositiveSentimentWithNegativeContext ? 'Yes' : 'No'}
+                    </li>
+                    <li>
+                        Semantic Score: ${result.indicators.semanticScore !== undefined ? (result.indicators.semanticScore * 100).toFixed(2) : '0.00'}%
+                    </li>
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html> 

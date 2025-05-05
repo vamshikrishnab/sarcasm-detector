@@ -1,12 +1,12 @@
 {
   "name": "sarcasm-detector",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A sophisticated NLP-based sarcasm detection library for both Node.js and browser environments",
   "main": "dist/sarcasm-detector.js",
   "browser": "dist/sarcasm-detector.js",
   "types": "dist/sarcasm-detector.d.ts",
   "scripts": {
-    "build": "mkdir -p dist && cp demo/sarcasm-detector.js dist/ && cp demo/index.html dist/demo.html",
+    "build": "mkdirp dist && cp demo/sarcasm-detector.js dist/ && cp demo/index.html dist/demo.html",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -33,5 +33,8 @@
   "bugs": {
     "url": "https://github.com/vamshikrishnab/sarcasm-detector/issues"
   },
-  "homepage": "https://github.com/vamshikrishnab/sarcasm-detector#readme"
-} 
+  "homepage": "https://github.com/vamshikrishnab/sarcasm-detector#readme",
+  "devDependencies": {
+    "mkdirp": "^3.0.1"
+  }
+}
