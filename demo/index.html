@@ -156,8 +156,9 @@
                     <strong>Is Sarcastic:</strong> ${result.isSarcastic ? 'Yes' : 'No'}
                 </div>
                 <p><strong>Confidence:</strong> ${(result.confidence * 100).toFixed(2)}%</p>
-                <p><strong>Sentiment Score:</strong> ${result.sentiment}</p>
-                <p><strong>Tone:</strong> ${tone.tone}</p>
+                <p><strong>Sentiment Score:</strong> ${result.sentiment.toFixed(2)}</p>
+                <p><strong>Tone:</strong> ${tone.tone} (${(tone.confidence * 100).toFixed(2)}% confidence)</p>
+                <p><strong>Context Score:</strong> ${(result.indicators.contextScore * 100).toFixed(2)}%</p>
                 <h4>Indicators:</h4>
                 <ul>
                     <li class="indicator ${result.indicators.patternMatches}">
