@@ -90,6 +90,9 @@
             color: #333;
             margin-bottom: 30px;
         }
+        .test-cases {
+            margin-left: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -176,7 +179,7 @@
                         Positive Sentiment with Negative Context: ${result.indicators.hasPositiveSentimentWithNegativeContext ? 'Yes' : 'No'}
                     </li>
                     <li>
-                        Semantic Score: ${(result.indicators.semanticScore * 100).toFixed(2)}%
+                        Semantic Score: ${result.indicators.semanticScore !== undefined ? (result.indicators.semanticScore * 100).toFixed(2) : '0.00'}%
                     </li>
                 </ul>
             `;
